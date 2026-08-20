@@ -1,0 +1,8 @@
+interface:
+  display_name: "Codex Coin Burst · 爆金币"
+  short_description: "Codex 完成主任务时，清脆爆一次金币并支持对话换声"
+  brand_color: "#F5B800"
+  default_prompt: "使用 $codex-task-completion-sound 安装默认爆金币提示音。"
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,25 @@
+{
+  "name": "codex-task-completion-sound",
+  "version": "0.3.0",
+  "description": "Make Codex burst a crisp coin sound when a user-owned main task finishes.",
+  "author": {
+    "name": "lunacy-xc",
+    "url": "https://github.com/lunacy-xc"
+  },
+  "homepage": "https://github.com/lunacy-xc/codex-task-completion-sound",
+  "repository": "https://github.com/lunacy-xc/codex-task-completion-sound",
+  "license": "MIT",
+  "keywords": ["codex", "completion", "coin", "notification", "windows"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Coin Burst · 爆金币",
+    "shortDescription": "Codex 完成主任务，清脆爆一次金币。",
+    "longDescription": "让 Codex 完成用户主任务时清脆爆一次金币。内置原创默认金币声，支持对话式试听、更换、恢复、暂停和重新开启，并过滤启动、运行中后台工作、自动检查和子任务误报。",
+    "developerName": "lunacy-xc",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "使用 $codex-task-completion-sound 安装默认爆金币提示音。",
+    "brandColor": "#F5B800",
+    "websiteURL": "https://github.com/lunacy-xc/codex-task-completion-sound"
+  }
+}

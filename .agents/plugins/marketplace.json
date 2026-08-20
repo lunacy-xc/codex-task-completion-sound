@@ -1,0 +1,20 @@
+{
+  "name": "codex-task-completion-sound",
+  "interface": {
+    "displayName": "Codex Coin Burst · 爆金币"
+  },
+  "plugins": [
+    {
+      "name": "codex-task-completion-sound",
+      "source": {
+        "source": "local",
+        "path": "./plugins/codex-task-completion-sound"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
