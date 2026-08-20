@@ -1,0 +1,7 @@
+interface:
+  display_name: "Codex 任务完成金币音"
+  short_description: "通过对话配置、更换、试听或恢复只在主任务结束时播放的提示音"
+  default_prompt: "使用 $codex-task-completion-sound 配置或更换我的 Codex 任务完成提示音。"
+
+policy:
+  allow_implicit_invocation: true

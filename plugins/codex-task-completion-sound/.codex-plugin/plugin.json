@@ -1,0 +1,18 @@
+{
+  "name": "codex-task-completion-sound",
+  "version": "0.2.0",
+  "description": "Configure and conversationally manage a Windows Codex completion sound for user-owned main tasks.",
+  "author": {
+    "name": "lunacy-xc"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex 任务完成提示音",
+    "shortDescription": "通过对话更换并管理只在主任务结束时播放的提示音。",
+    "longDescription": "配置、排查并通过自然语言管理 Windows 版 Codex 的任务完成提示音。支持试听、更换、恢复、暂停和重新开启，同时过滤启动、后台摘要、自动检查和子任务产生的误报。",
+    "developerName": "lunacy-xc",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use $codex-task-completion-sound to configure or conversationally replace my task completion sound."
+  }
+}
