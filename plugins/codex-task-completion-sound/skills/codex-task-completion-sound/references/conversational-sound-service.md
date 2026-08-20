@@ -10,6 +10,7 @@ Map the user's request to one action in `scripts/manage-sound.ps1`:
 | --- | --- | --- |
 | “现在用的什么声音？” / “查看状态” | `status` | No |
 | “试听一下” / “播放当前声音” | `preview` | No |
+| “换回默认金币声” / “使用内置金币音” | `default` | No |
 | “换成这个声音” / “使用 C:\sounds\coin.wav” | `replace` | Yes |
 | “换回刚才那个” / “恢复上一个” | `restore` | No |
 | “暂时别响” / “关闭提示音” | `disable` | No |
@@ -25,13 +26,14 @@ Run the script with Windows PowerShell and bypass only the process execution pol
 powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File <skill-path>\scripts\manage-sound.ps1 -Action status
 ```
 
-For replacement, also pass `-SourcePath <absolute-wav-path>`. Use `-NoPreview` only when the user asks not to hear it immediately. Pass `-CodexHome` only when discovery is incorrect or the user selected a non-default Codex home.
+For custom replacement, also pass `-SourcePath <absolute-wav-path>`. The `default` action resolves the bundled `assets/default-coin.wav` without a source argument. Use `-NoPreview` only when the user asks not to hear it immediately. Pass `-CodexHome` only when discovery is incorrect or the user selected a non-default Codex home.
 
 The script returns compact JSON. Report the human meaning rather than dumping raw JSON.
 
 ## Replacement rules
 
 - Accept only a local `.wav` file that `System.Media.SoundPlayer` can load.
+- Treat the bundled `assets/default-coin.wav` as the normal first-install sound and the target of the `default` action.
 - Resolve the exact source path before writing anything.
 - The script backs up the active or disabled sound as `task-complete.previous.wav` before replacement.
 - Replacement enables the new sound and previews it by default.
@@ -43,6 +45,7 @@ The script returns compact JSON. Report the human meaning rather than dumping ra
 Keep confirmations concise and state what changed:
 
 - Replaced: identify the source filename, confirm backup, and say whether preview succeeded.
+- Default: confirm that the bundled original coin sound is active and say whether preview succeeded.
 - Restored: confirm the previous sound is active and the replaced sound remains available for another restore.
 - Disabled: say completion detection remains installed but audio is paused.
 - Enabled: say the stored sound is active again.

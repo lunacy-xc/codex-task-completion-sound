@@ -1,5 +1,6 @@
 dist/
 *.wav
+!plugins/codex-task-completion-sound/skills/codex-task-completion-sound/assets/default-coin.wav
 *.mp3
 *.ogg
 __pycache__/

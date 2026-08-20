@@ -23,9 +23,11 @@ Adapt and install these files next to `config.toml`:
 
 - `task-complete-notify.ps1`
 - `user_thread_filter.py`
-- `task-complete.wav`, supplied by the user
+- `task-complete.wav`, copied from the bundled `assets/default-coin.wav` unless the user selects a custom WAV
 
 Keep the source skill unchanged. Stage machine-specific copies before installation.
+
+The bundled default is an original code-synthesized coin sound. Do not make first-time setup depend on the user locating an audio file. A user-provided custom WAV remains optional.
 
 ## Configuration integration
 

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('status', 'preview', 'replace', 'restore', 'disable', 'enable')]
+    [ValidateSet('status', 'preview', 'default', 'replace', 'restore', 'disable', 'enable')]
     [string] $Action = 'status',
 
     [string] $SourcePath,
@@ -99,6 +99,47 @@ function Write-ServiceResult {
     $result | ConvertTo-Json -Compress
 }
 
+function Install-ManagedSound {
+    param(
+        [Parameter(Mandatory = $true)][string] $ResolvedSource,
+        [Parameter(Mandatory = $true)][string] $ResultAction,
+        [Parameter(Mandatory = $true)][string] $Message
+    )
+
+    Test-PlayableWav -Path $ResolvedSource
+    New-Item -ItemType Directory -Path $CodexHome -Force | Out-Null
+
+    if (Test-Path -LiteralPath $activePath -PathType Leaf) {
+        Copy-Item -LiteralPath $activePath -Destination $previousPath -Force
+    }
+    elseif (Test-Path -LiteralPath $disabledPath -PathType Leaf) {
+        Copy-Item -LiteralPath $disabledPath -Destination $previousPath -Force
+    }
+
+    $temporaryPath = Join-Path $CodexHome ("task-complete.{0}.wav" -f [Guid]::NewGuid().ToString('N'))
+    try {
+        Copy-Item -LiteralPath $ResolvedSource -Destination $temporaryPath -Force
+        Test-PlayableWav -Path $temporaryPath
+        Move-Item -LiteralPath $temporaryPath -Destination $activePath -Force
+    }
+    finally {
+        if (Test-Path -LiteralPath $temporaryPath) {
+            Remove-Item -LiteralPath $temporaryPath -Force
+        }
+    }
+
+    if (Test-Path -LiteralPath $disabledPath -PathType Leaf) {
+        Remove-Item -LiteralPath $disabledPath -Force
+    }
+
+    $previewed = $false
+    if (-not $NoPreview) {
+        Play-Wav -Path $activePath
+        $previewed = $true
+    }
+    Write-ServiceResult -ResultAction $ResultAction -Message $Message -Previewed $previewed
+}
+
 switch ($Action) {
     'status' {
         Write-ServiceResult -ResultAction 'status' -Message "Sound state: $(Get-SoundState)."
@@ -120,44 +161,21 @@ switch ($Action) {
         break
     }
 
+    'default' {
+        $skillRoot = Split-Path -Parent $PSScriptRoot
+        $defaultSource = Join-Path $skillRoot 'assets\default-coin.wav'
+        $resolvedDefault = (Resolve-Path -LiteralPath $defaultSource -ErrorAction Stop).Path
+        Install-ManagedSound -ResolvedSource $resolvedDefault -ResultAction 'default' -Message 'Bundled default coin sound activated.'
+        break
+    }
+
     'replace' {
         if ([string]::IsNullOrWhiteSpace($SourcePath)) {
             throw 'SourcePath is required for replacement.'
         }
 
         $resolvedSource = (Resolve-Path -LiteralPath $SourcePath -ErrorAction Stop).Path
-        Test-PlayableWav -Path $resolvedSource
-        New-Item -ItemType Directory -Path $CodexHome -Force | Out-Null
-
-        if (Test-Path -LiteralPath $activePath -PathType Leaf) {
-            Copy-Item -LiteralPath $activePath -Destination $previousPath -Force
-        }
-        elseif (Test-Path -LiteralPath $disabledPath -PathType Leaf) {
-            Copy-Item -LiteralPath $disabledPath -Destination $previousPath -Force
-        }
-
-        $temporaryPath = Join-Path $CodexHome ("task-complete.{0}.wav" -f [Guid]::NewGuid().ToString('N'))
-        try {
-            Copy-Item -LiteralPath $resolvedSource -Destination $temporaryPath -Force
-            Test-PlayableWav -Path $temporaryPath
-            Move-Item -LiteralPath $temporaryPath -Destination $activePath -Force
-        }
-        finally {
-            if (Test-Path -LiteralPath $temporaryPath) {
-                Remove-Item -LiteralPath $temporaryPath -Force
-            }
-        }
-
-        if (Test-Path -LiteralPath $disabledPath -PathType Leaf) {
-            Remove-Item -LiteralPath $disabledPath -Force
-        }
-
-        $previewed = $false
-        if (-not $NoPreview) {
-            Play-Wav -Path $activePath
-            $previewed = $true
-        }
-        Write-ServiceResult -ResultAction 'replace' -Message "Sound replaced from $resolvedSource." -Previewed $previewed
+        Install-ManagedSound -ResolvedSource $resolvedSource -ResultAction 'replace' -Message "Sound replaced from $resolvedSource."
         break
     }
 
